@@ -42,7 +42,7 @@ jobs:
       - name: Cache Model Folder
         uses: actions/cache@v3
         with:
-          path: models/flan_t5_base
+          path: models/flan_t5_base/
           key: ${{ runner.os }}-model-${{ hashFiles('models/flan_t5_base/config.json') }}
           restore-keys: |
             ${{ runner.os }}-model-
