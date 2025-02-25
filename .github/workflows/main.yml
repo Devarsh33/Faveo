@@ -27,25 +27,43 @@ jobs:
         uses: actions/cache@v3
         with:
           path: venv
-          key: ${{ runner.os }}-venv-${{ hashFiles('requirements.txt') }}
+          key: venv-cache-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-venv-
+            venv-cache-
 
-      - name: Install Dependencies (Only if not cached)
+      - name: Cache Pip Downloads
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: pip-cache-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            pip-cache-
+
+      - name: Setup Virtual Environment
         run: |
-          if [ ! -d "venv" ]; then
-            python -m venv venv
-            source venv/bin/activate
-            pip install -r requirements.txt
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Ensure Model Exists
+        run: |
+          if [ ! -f "models/flan_t5_base/tokenizer_config.json" ]; then
+            echo "Model not found, downloading..."
+            mkdir -p models/flan_t5_base
+            huggingface-cli download google/flan-t5-base --local-dir models/flan_t5_base
           fi
 
       - name: Cache Model Folder
         uses: actions/cache@v3
         with:
-          path: models/flan_t5_base/
-          key: ${{ runner.os }}-model-${{ hashFiles('models/flan_t5_base/config.json') }}
+          path: models/flan_t5_base
+          key: model-cache-${{ runner.os }}
           restore-keys: |
-            ${{ runner.os }}-model-
+            model-cache-
+
+      - name: Debug Cached Model Files
+        run: ls -lah models/flan_t5_base || echo "Model folder is empty!"
 
       - name: Run Ticket Analyzer
         run: |
@@ -65,3 +83,6 @@ jobs:
           curl -X POST "https://spring-brook-3876.tines.com/webhook/34b344cf8982c2fdc147aefcad15560c/67264f4dc3607c57c7e82cc2a0bc2c6f" \
                -H "Content-Type: application/json" \
                -d "$JSON_OUTPUT"
+
+      - name: Verify Cached Model After Job
+        run: ls -lah models/flan_t5_base
