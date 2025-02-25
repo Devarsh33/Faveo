@@ -47,9 +47,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-model-
 
-      - name: Debug File Paths
-        run: ls -R
-
       - name: Run Ticket Analyzer
         run: |
           source venv/bin/activate
