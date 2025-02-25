@@ -1,0 +1,67 @@
+name: Ticket Tagging Automation
+
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: "Ticket Title"
+        required: true
+      body:
+        description: "Ticket Body"
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Cache Virtual Environment
+        uses: actions/cache@v3
+        with:
+          path: venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-venv-
+
+      - name: Install Dependencies (Only if not cached)
+        run: |
+          if [ ! -d "venv" ]; then
+            python -m venv venv
+            source venv/bin/activate
+            pip install -r requirements.txt
+          fi
+
+      - name: Cache Model Folder
+        uses: actions/cache@v3
+        with:
+          path: model/
+          key: ${{ runner.os }}-model-${{ hashFiles('model/config.json') }}
+          restore-keys: |
+            ${{ runner.os }}-model-
+
+      - name: Run Ticket Analyzer
+        run: |
+          source venv/bin/activate
+          TITLE=$(echo '${{ github.event.inputs.title }}' | jq -Rs .)
+          BODY=$(echo '${{ github.event.inputs.body }}' | jq -Rs .)
+          JSON_OUTPUT=$(echo '{}' | jq --arg title "$TITLE" --arg body "$BODY" '.title=$title | .body=$body' | python src/tag.py)
+          echo "Generated JSON Output:"
+          echo "$JSON_OUTPUT"
+          
+          echo "JSON_OUTPUT<<EOF" >> $GITHUB_ENV
+          echo "$JSON_OUTPUT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Send Output to Tines
+        run: |
+          curl -X POST "https://spring-brook-3876.tines.com/webhook/34b344cf8982c2fdc147aefcad15560c/67264f4dc3607c57c7e82cc2a0bc2c6f" \
+               -H "Content-Type: application/json" \
+               -d "$JSON_OUTPUT"
