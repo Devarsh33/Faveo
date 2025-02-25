@@ -7,7 +7,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # Prevents CUDA errors if running on 
 
 import torch
 
-model_path = os.path.abspath("../models/flan_t5_base")
+model_path = os.path.join(os.getcwd(), "models", "flan_t5_base")
 
 # Load Flan-T5 Base model and tokenizer
 tokenizer = T5Tokenizer.from_pretrained(model_path)
