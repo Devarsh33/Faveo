@@ -31,30 +31,29 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-venv-
 
+      - name: Cache dependencies and model
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/huggingface
+            ~/.local/lib/python3.11/site-packages
+          key: flan-t5-base-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+
       - name: Install Dependencies (Only if not cached)
         run: |
           if [ ! -d "venv" ]; then
             python -m venv venv
             source venv/bin/activate
-            pip install -r requirements.txt
+            pip install --no-cache-dir -r requirements.txt
           fi
 
-      - name: Cache Hugging Face Model
-        id: cache-hf-model
+      - name: Cache Model Folder
         uses: actions/cache@v3
         with:
-          path: ~/.cache/huggingface/transformers
-          key: ${{ runner.os }}-huggingface-${{ hashFiles('model/config.json') }}
+          path: model/
+          key: ${{ runner.os }}-model-${{ hashFiles('model/config.json') }}
           restore-keys: |
-            ${{ runner.os }}-huggingface-
-
-      - name: Download Model (If Not Cached)
-        if: steps.cache-hf-model.outputs.cache-hit != 'true'
-        run: |
-          source venv/bin/activate
-          python -c "from transformers import T5Tokenizer, T5ForConditionalGeneration; \
-                     T5Tokenizer.from_pretrained('google/flan-t5-base'); \
-                     T5ForConditionalGeneration.from_pretrained('google/flan-t5-base')"
+            ${{ runner.os }}-model-
 
       - name: Run Ticket Analyzer
         run: |
