@@ -83,11 +83,12 @@ def process_ticket(ticket):
     """Process the ticket: summarize and assign a tag while preserving token and ID."""
     title = ticket.get("title", "")
     body = ticket.get("body", "")
+    ticket_id = ticket.get("id", None)  # Preserve ID if available
 
     summary = nlp_summarize(body)
     tag = classify_ticket(title, summary)
 
-    return {"summary": summary, "tag": tag}
+    return {"id": ticket_id, "summary": summary, "tag": tag}
 
 
 if __name__ == "__main__":
