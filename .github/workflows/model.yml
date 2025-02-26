@@ -1,18 +1,19 @@
-name: Cache FLAN-T5 Model
+name: Store FLAN-T5 Model as Artifact
 
 on:
   workflow_dispatch:
 
 jobs:
-  cache-model:
+  store-model:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Cache Model Folder
-        uses: actions/cache@v3
+      - name: Upload Model as Artifact
+        uses: actions/upload-artifact@v3
         with:
+          name: flan-t5-base
           path: models/flan_t5_base
-          key: flan-t5-base-${{ runner.os }}
+          retention-days: 90  # Store for 30 days (adjust as needed)
