@@ -42,10 +42,10 @@ jobs:
       - name: Cache Model Folder
         uses: actions/cache@v3
         with:
-          path: models/flan_t5_base/
-          key: ${{ runner.os }}-model-${{ hashFiles('models/flan_t5_base/config.json') }}
+          path: models/flan_t5_base
+          key: flan-t5-base-${{ runner.os }}-${{ hashFiles('models/flan_t5_base/*') }}
           restore-keys: |
-            ${{ runner.os }}-model-
+            flan-t5-base-${{ runner.os }}-
 
       - name: Run Ticket Analyzer
         run: |
