@@ -1,0 +1,18 @@
+name: Cache FLAN-T5 Model
+
+on:
+  workflow_dispatch:
+
+jobs:
+  cache-model:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Cache Model Folder
+        uses: actions/cache@v3
+        with:
+          path: models/flan_t5_base
+          key: flan-t5-base-${{ runner.os }}
