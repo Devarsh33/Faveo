@@ -52,7 +52,7 @@ jobs:
           source venv/bin/activate
           TITLE=$(echo '${{ github.event.inputs.title }}' | jq -Rs .)
           BODY=$(echo '${{ github.event.inputs.body }}' | jq -Rs .)
-          JSON_OUTPUT=$(echo '{}' | jq --arg title "$TITLE" --arg body "$BODY" '.title=$title | .body=$body' | python src/tag.py)
+          JSON_OUTPUT=$(echo '{}' | jq --arg title "$TITLE" --arg body "$BODY" '.title=$title | .body=$body' | python tag.py)
           echo "Generated JSON Output:"
           echo "$JSON_OUTPUT"
           
