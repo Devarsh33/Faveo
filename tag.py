@@ -1,12 +1,14 @@
+import sys
 import json
 import os
-import sys
-
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # Prevents CUDA errors if running on CPU
 
-model_path = os.path.expanduser("~/.cache/huggingface/transformers/google/flan-t5-base")
+import torch
+
+# script_dir = os.path.dirname(os.path.abspath(__file__))  # Get current script directory
+model_path = "google/flan-t5-base"
 
 # Load Flan-T5 Base model and tokenizer
 tokenizer = T5Tokenizer.from_pretrained(model_path)
@@ -90,12 +92,12 @@ def process_ticket(ticket):
 
 if __name__ == "__main__":
     try:
-        # with open("input.json", "r") as f:
-        #     ticket = json.load(f)
+        with open("input.json", "r") as f:
+            ticket = json.load(f)
 
-        # Read input from Tines (via stdin)
-        input_data = sys.stdin.read()
-        ticket = json.loads(input_data)
+        # # Read input from Tines (via stdin)
+        # input_data = sys.stdin.read()
+        # ticket = json.loads(input_data)
 
         # Process the ticket
         result = process_ticket(ticket)
