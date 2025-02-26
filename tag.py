@@ -92,12 +92,12 @@ def process_ticket(ticket):
 
 if __name__ == "__main__":
     try:
-        with open("input.json", "r") as f:
-            ticket = json.load(f)
+        # with open("input.json", "r") as f:
+        #     ticket = json.load(f)
 
-        # # Read input from Tines (via stdin)
-        # input_data = sys.stdin.read()
-        # ticket = json.loads(input_data)
+        # Read input from Tines (via stdin)
+        input_data = sys.stdin.read()
+        ticket = json.loads(input_data)
 
         # Process the ticket
         result = process_ticket(ticket)
