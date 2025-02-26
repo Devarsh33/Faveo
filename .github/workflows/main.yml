@@ -62,6 +62,6 @@ jobs:
 
       - name: Send Output to Tines
         run: |
-          curl -X POST "https://spring-brook-3876.tines.com/webhook/34b344cf8982c2fdc147aefcad15560c/67264f4dc3607c57c7e82cc2a0bc2c6f" \
+          curl -X POST "https://spring-brook-3876.tines.com/webhook/a0ad40d2055057b65453f07e1b4782b8/f977218f28ee9dd7461cfcf60df451cf" \
                -H "Content-Type: application/json" \
                -d "$JSON_OUTPUT"
