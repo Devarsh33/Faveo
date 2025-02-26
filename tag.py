@@ -23,7 +23,7 @@ tags_with_keywords = {
     "EmailWhitelisting": ["email whitelist", "allow email", "proofpoint", "deliver email"],
     "AppAssignment": ["application assignment", "add user to app", "app access"],
     "chatops:mfa-bypass": ["mfa bypass", "temporary mfa", "bypass mfa"],
-    "VM": ["remove host", "decommission vm", "track vm", "nessus"],
+    "VM": ["remove host", "decommission vm", "track vm", "nessus", "remove server", "tenable", "decom"],
     "PhishingReport": ["phishing report", "possible phishing", "malicious email"],
     "GenericInformation": ["generic ticket", "secops ticket", "general request"],
     "PasswordReset": ["password reset", "okta reset", "ad password reset"],
@@ -42,7 +42,22 @@ tags_with_keywords = {
 def nlp_summarize(text):
     """Perform natural-language summarization for better readability."""
     input_text = (
-        "Summarize this IT support ticket concisely while preserving key details: " + text
+        "You are an AI model trained to process IT security support tickets. Your task is to summarize the following "
+        "ticket while preserving essential security-related details.\n\n"
+        "### Instructions:\n"
+        "1. Identify the core issue or request described in the ticket.\n"
+        "2. Extract relevant technical details, including affected applications, services, security tools, and account names if mentioned.\n"
+        "3. Identify requested actions, such as whitelisting, password resets, access approvals, or investigations.\n"
+        "4. Retain important security context, including any references to phishing, multi-factor authentication (MFA), VPN, Active Directory, or security tools.\n"
+        "5. Be concise: Keep the summary within 1-2 sentences while ensuring that no critical details are lost.\n"
+        "6. Avoid unnecessary words: Do not include greetings, apologies, or generic phrases unless they add meaningful context.\n"
+        "7. Preserve clarity: Ensure the summary is actionable and easy to understand by a cybersecurity analyst.\n\n"
+        "### Ticket Information:\n"
+        f"{text}\n\n"
+        "### Expected Summary Format:\n"
+        "- Clearly state the problem and requested action.\n"
+        "- Mention the affected system/service/tool if specified.\n"
+        "- Avoid generic or vague responses."
     )
     inputs = tokenizer(input_text, return_tensors="pt", max_length=512, truncation=True)
 
