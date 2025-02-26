@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       title:
-        description: "Ticket Title"
+        description: "Ticket title"
         required: true
       body:
-        description: "Ticket Body"
+        description: "Ticket body"
         required: true
 
 jobs:
