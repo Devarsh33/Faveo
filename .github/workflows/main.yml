@@ -9,9 +9,6 @@ on:
       body:
         description: "Ticket body"
         required: true
-        id:
-          description: "Ticket ID"
-          required: true
 
 jobs:
   build:
@@ -56,8 +53,8 @@ jobs:
           TITLE=$(echo '${{ github.event.inputs.title }}' | jq -Rs .)
           BODY=$(echo '${{ github.event.inputs.body }}' | jq -Rs .)
           ID=$(echo '${{ github.event.inputs.id }}' | jq -Rs .)
-          JSON_OUTPUT=$(echo '{}' | jq --arg title "$TITLE" --arg body "$BODY" --arg id "$ID" \
-            '.title=$title | .body=$body | .id=$id' | python tag.py)
+          JSON_OUTPUT=$(echo '{}' | jq --arg title "$TITLE" --arg body "$BODY" \
+            '.title=$title | .body=$body | python tag.py)
           echo "Generated JSON Output:"
           echo "$JSON_OUTPUT"
           

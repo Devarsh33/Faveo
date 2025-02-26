@@ -90,8 +90,7 @@ def process_ticket(ticket):
 
     return {
         "summary": summary,
-        "tag": tag,
-        "id": ticket_id   # Preserve ticket ID
+        "tag": tag
     }
 
 
