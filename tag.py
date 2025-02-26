@@ -83,7 +83,6 @@ def process_ticket(ticket):
     """Process the ticket: summarize and assign a tag while preserving token and ID."""
     title = ticket.get("title", "").strip()
     body = ticket.get("body", "").strip()
-    token = ticket.get("token", "")
     ticket_id = ticket.get("id", "")
 
     summary = nlp_summarize(body)
@@ -92,7 +91,6 @@ def process_ticket(ticket):
     return {
         "summary": summary,
         "tag": tag,
-        "token": token,  # Preserve token
         "id": ticket_id   # Preserve ticket ID
     }
 

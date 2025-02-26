@@ -9,9 +9,6 @@ on:
       body:
         description: "Ticket body"
         required: true
-      token:
-        description: "Auth Token"
-        required: true
         id:
           description: "Ticket ID"
           required: true
@@ -58,10 +55,9 @@ jobs:
           source venv/bin/activate
           TITLE=$(echo '${{ github.event.inputs.title }}' | jq -Rs .)
           BODY=$(echo '${{ github.event.inputs.body }}' | jq -Rs .)
-          TOKEN=$(echo '${{ github.event.inputs.token }}' | jq -Rs .)
           ID=$(echo '${{ github.event.inputs.id }}' | jq -Rs .)
-          JSON_OUTPUT=$(echo '{}' | jq --arg title "$TITLE" --arg body "$BODY" --arg token "$TOKEN" --arg id "$ID" \
-            '.title=$title | .body=$body | .token=$token | .id=$id' | python tag.py)
+          JSON_OUTPUT=$(echo '{}' | jq --arg title "$TITLE" --arg body "$BODY" --arg id "$ID" \
+            '.title=$title | .body=$body | .id=$id' | python tag.py)
           echo "Generated JSON Output:"
           echo "$JSON_OUTPUT"
           
