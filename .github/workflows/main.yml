@@ -9,6 +9,12 @@ on:
       body:
         description: "Ticket body"
         required: true
+      token:
+        description: "Auth Token"
+        required: true
+        id:
+          description: "Ticket ID"
+          required: true
 
 jobs:
   build:
