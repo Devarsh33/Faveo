@@ -39,13 +39,22 @@ jobs:
             pip install -r requirements.txt
           fi
 
-      - name: Cache Model Folder
+      - name: Cache Hugging Face Model
+        id: cache-hf-model
         uses: actions/cache@v3
         with:
-          path: model/
-          key: ${{ runner.os }}-model-${{ hashFiles('model/config.json') }}
+          path: ~/.cache/huggingface/transformers
+          key: ${{ runner.os }}-huggingface-${{ hashFiles('model/config.json') }}
           restore-keys: |
-            ${{ runner.os }}-model-
+            ${{ runner.os }}-huggingface-
+
+      - name: Download Model (If Not Cached)
+        if: steps.cache-hf-model.outputs.cache-hit != 'true'
+        run: |
+          source venv/bin/activate
+          python -c "from transformers import T5Tokenizer, T5ForConditionalGeneration; \
+                     T5Tokenizer.from_pretrained('google/flan-t5-base'); \
+                     T5ForConditionalGeneration.from_pretrained('google/flan-t5-base')"
 
       - name: Run Ticket Analyzer
         run: |
